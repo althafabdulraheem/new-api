@@ -45,6 +45,6 @@ class User extends Authenticatable
 
     public function preferences()
     {
-        return $this->hasMany('App\Models\UserPreference','user_id','id');
+        return $this->hasOne('App\Models\UserPreference','user_id','id');
     }
 }

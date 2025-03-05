@@ -29,6 +29,7 @@ Route::group(['middleware'=>'auth:sanctum'],function()
     Route::get('/user-preferences',[UserPreferenceController::class,'getPreferences']);
     Route::post('/user-preferences',[UserPreferenceController::class,'setPreferences']);
 
+    Route::post('password-reset',[AuthController::class,'password_reset']);
     Route::post('/logout',[AuthController::class,'logout']);;
 
 });

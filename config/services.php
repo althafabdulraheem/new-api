@@ -33,6 +33,8 @@ return [
 
     'news_apis'=>[
         'newsorg'=>env('NEWSORGAPI_KEY'),
+        'guardian'=>env('GUARDIAN_KEY'),
+        'newyorktimes'=>env('NEWYORK_TIMES')
 
     ]
 ];
