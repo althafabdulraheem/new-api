@@ -35,14 +35,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $data=$request->all();
-        $validater=Validator::make($data,['email'=>'required|email',
+        $validator=Validator::make($data,['email'=>'required|email',
                                     'password'=>'required|min:6'],
                                     ['email.required'=>'please enter email',
                                     'password.required'=>'please enter password']);
         
         if($validater->fails())
         {
-            return response()->json(['status'=>false,'errors'=>$validater->getMessageBag()],400);
+            return response()->json(['status'=>false,'errors'=>$validator->getMessageBag()],400);
         }
 
         $user = User::where('email',$data['email'])->first();

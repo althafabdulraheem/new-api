@@ -35,7 +35,7 @@ class FetchNews extends Command
         try{
             $api_key=config('services.news_apis.newsorg');
             $category='bitcoin';
-             $response=Http::get("https://newsapi.org/v2/everything?q=$category&apiKey=$api_key&pageSize=10");
+             $response=Http::get("https://newsapi.org/v2/everything?q=$category&apiKey=$api_key");
            
              if($response->successful())
              {

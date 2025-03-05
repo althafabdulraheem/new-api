@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\{AuthController,NewsController};
+use App\Http\Controllers\Api\{AuthController,NewsController,UserPreferenceController};
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +24,11 @@ Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::group(['middleware'=>'auth:sanctum'],function()
 {
     Route::get('/news',[NewsController::class,'index']);
+    Route::get('/news-filter',[NewsController::class,'filter']);
+    Route::get('/news/{slug}',[NewsController::class,'news']); //for retreving single news
+    Route::get('/user-preferences',[UserPreferenceController::class,'getPreferences']);
+    Route::post('/user-preferences',[UserPreferenceController::class,'setPreferences']);
+
     Route::post('/logout',[AuthController::class,'logout']);;
 
 });
