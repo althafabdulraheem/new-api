@@ -5,36 +5,45 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Models\News;
+use App\Models\{News,UserPreference};
+use Cache;
 
 class NewsController extends Controller
 {
     public function index(Request $request)
     {
         try{
-            $news=News::select('*');
-            $preferences=auth()->user()->preferences;
-            if($preferences)
-            {
+            // $news=News::select('*');
+            // $preferences=auth()->user()->preferences;
+            
+            // if($preferences)
+            // {
                
-                if (!empty($preferences->sources)) {
-                    $news->whereIn('source', $preferences->sources);
-                }
-                if (!empty($preferences->categories)) {
+            //     if (!empty($preferences->sources)) {
+            //         $news->whereIn('source', $preferences->sources);
+            //     }
+            //     if (!empty($preferences->categories)) {
                    
-                    $news->whereIn('category', $preferences->categories);
-                }
-                if (!empty($preferences->authors)) {
-                    $news->whereIn('author', $preferences->authors);
+            //         $news->whereIn('category', $preferences->categories);
+            //     }
+            //     if (!empty($preferences->authors)) {
+            //         $news->whereIn('author', $preferences->authors);
                     
-                }
-            }
-            $news=$news->paginate(10);
+            //     }
+            // }
+            $userId=auth()->user()->id;
+            $userPref=auth()->user()->preferences->sources;
+         
+            $news=Cache::remember("user_feed_{$userId}",null, function () use ($userPref) {
+                return News::whereIn('source', json_decode($userPref))
+                ->paginate(10);
+                   
+                });
             return response()->json(['status'=>true,'data'=>$news],200);
         }
         catch(\Exception $e)
         {
-           dd($e);
+          
            \Log::info($e);
             return response()->json(['status'=>false,'message'=>'error while fetching data'],500);
 
@@ -52,7 +61,7 @@ class NewsController extends Controller
                 
                 $news=$news->whereDate('created_at',$request->date);
             }
-            if(isset($request->categories) && $request->category !=null)
+            if(isset($request->category) && $request->category !=null)
             {
                 $news=$news->where('catergory',$request->category);
 
@@ -62,9 +71,9 @@ class NewsController extends Controller
                 $news=$news->where('catergory','LIKE','%'.$request->keyword.'%');
 
             }
-            if(isset($request->sources) && $request->sources !=null)
+            if(isset($request->source) && $request->source !=null)
             {
-                $news=$news->where('source',$request->sources);
+                $news=$news->where('source',$request->source);
             }
            
             $news=$news->get();

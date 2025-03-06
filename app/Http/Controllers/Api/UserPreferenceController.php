@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\UserPreference;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Cache;
 
 class UserPreferenceController extends Controller
 {
     public function setPreferences(Request $request)
     {
         $data=$request->all();
+
         $validator=Validator::make($data,[
             'sources' => 'nullable|array',
             'categories' => 'nullable|array',
@@ -33,7 +35,7 @@ class UserPreferenceController extends Controller
             'authors' => json_encode($request->authors),
             ]
         );
-
+        Cache::forget("user_feed_{$user->id}");
         return response()->json(['status'=>true,'message'=>'successfully added'],200);
     }
 
