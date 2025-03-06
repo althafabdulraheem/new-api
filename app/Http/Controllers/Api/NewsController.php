@@ -13,32 +13,30 @@ class NewsController extends Controller
     public function index(Request $request)
     {
         try{
-            // $news=News::select('*');
-            // $preferences=auth()->user()->preferences;
             
-            // if($preferences)
-            // {
+            $news=News::select('*');
+            $preferences=auth()->user()->preferences;
+           
+            if($preferences)
+            {
                
-            //     if (!empty($preferences->sources)) {
-            //         $news->whereIn('source', $preferences->sources);
-            //     }
-            //     if (!empty($preferences->categories)) {
+                if (!empty($preferences->sources)) {
                    
-            //         $news->whereIn('category', $preferences->categories);
-            //     }
-            //     if (!empty($preferences->authors)) {
-            //         $news->whereIn('author', $preferences->authors);
+                    $news->whereIn('source', json_decode($preferences->sources));
+                }
+                if (!empty($preferences->categories)) {
+                   
+                    $news->whereIn('category', json_decode($preferences->categories));
+                }
+                if (!empty($preferences->authors)) {
+                    $news->whereIn('author', json_decode($preferences->authors));
                     
-            //     }
-            // }
-            $userId=auth()->user()->id;
-            $userPref=auth()->user()->preferences->sources;
-         
-            $news=Cache::remember("user_feed_{$userId}",null, function () use ($userPref) {
-                return News::whereIn('source', json_decode($userPref))
-                ->paginate(10);
-                   
-                });
+                }
+            }
+
+            
+            $news=$news->paginate(10);
+            
             return response()->json(['status'=>true,'data'=>$news],200);
         }
         catch(\Exception $e)

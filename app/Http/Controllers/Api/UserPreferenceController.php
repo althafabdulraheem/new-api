@@ -35,7 +35,7 @@ class UserPreferenceController extends Controller
             'authors' => json_encode($request->authors),
             ]
         );
-        Cache::forget("user_feed_{$user->id}");
+        // Cache::forget("user_feed_{$user->id}");
         return response()->json(['status'=>true,'message'=>'successfully added'],200);
     }
 
