@@ -52,7 +52,7 @@ class NewsController extends Controller
                 
                 $news=$news->whereDate('created_at',$request->date);
             }
-            if(isset($request->category) && $request->category !=null)
+            if(isset($request->categories) && $request->category !=null)
             {
                 $news=$news->where('catergory',$request->category);
 
@@ -62,9 +62,9 @@ class NewsController extends Controller
                 $news=$news->where('catergory','LIKE','%'.$request->keyword.'%');
 
             }
-            if(isset($request->source) && $request->source !=null)
+            if(isset($request->sources) && $request->sources !=null)
             {
-                $news=$news->where('source',$request->source);
+                $news=$news->where('source',$request->sources);
             }
            
             $news=$news->get();

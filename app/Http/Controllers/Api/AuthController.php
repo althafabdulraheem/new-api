@@ -41,7 +41,7 @@ class AuthController extends Controller
                                     ['email.required'=>'please enter email',
                                     'password.required'=>'please enter password']);
         
-        if($validater->fails())
+        if($validator->fails())
         {
             return response()->json(['status'=>false,'errors'=>$validator->getMessageBag()],400);
         }
@@ -66,14 +66,14 @@ class AuthController extends Controller
     public function password_reset(Request $request)
     {
         $data=$request->all();
-        $validater=Validator::make($data,[
+        $validator=Validator::make($data,[
         'old_password'=>'required|min:6',
         'password'=>'required|min:6|confirmed'],
         ['password.required'=>'please enter password']);
 
-        if($validater->fails())
+        if($validator->fails())
         {
-            return response()->json(['status'=>false,'errors'=>$validater->getMessageBag()],400);
+            return response()->json(['status'=>false,'errors'=>$validator->getMessageBag()],400);
         }
         $user=Auth::user();
         if(Hash::check($request->old_password,$user->password))
